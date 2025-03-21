@@ -1,0 +1,77 @@
+services:
+  app1:  # Defines the PHP application container
+    build:
+      context: ..  # Set build context to the project root
+      dockerfile: docker/Dockerfile  # Dockerfile is inside the docker/ folder
+    container_name: php_app1
+    environment:
+      - APP_NAME=App1
+    ports:
+      - "3001:3000"  # Maps container's port 3000 to host's port 3001
+    volumes:
+      - ../:/var/www/html  # Mount the project root
+    depends_on:
+      db:
+        condition: service_healthy
+    # Ensures the database container starts first
+
+    # entrypoint: [ "sh", "-c", "./vendor/bin/doctrine-migrations migrate --no-interaction" ]
+    # This ensures that every time the container starts, it applies pending migrations before launching the app.
+
+  app2:  # Defines the PHP application container
+    build:
+      context: ..  # Set build context to the project root
+      dockerfile: docker/Dockerfile  # Dockerfile is inside the docker/ folder
+    container_name: php_app2
+    environment:
+      - APP_NAME=App2
+    ports:
+      - "3002:3000"  # Maps container's port 3000 to host's port 3001
+    volumes:
+      - ../:/var/www/html  # Mount the project root
+    depends_on:
+      db:
+        condition: service_healthy
+    # Ensures the database container starts first
+
+    # entrypoint: [ "sh", "-c", "./vendor/bin/doctrine-migrations migrate --no-interaction" ]
+    # This ensures that every time the container starts, it applies pending migrations before launching the app.
+
+  app3:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: php_app3
+    environment:
+      - APP_NAME=App3
+    ports:
+      - "3003:3000"
+    volumes:
+      - ../:/var/www/html  # Mount the project root
+    depends_on:
+      db:
+        condition: service_healthy
+    # entrypoint: [ "sh", "-c", "./vendor/bin/doctrine-migrations migrate --no-interaction && php -S 0.0.0.0:9000 -t public" ]
+    # entrypoint: [ "sh", "-c", "./vendor/bin/doctrine-migrations migrate --no-interaction" ]
+
+  db:  # Defines the MySQL database container
+    image: mysql:8.0  # Uses the MySQL 8.0 image
+    container_name: mysql_db
+    restart: always  # Ensures the container restarts on failure
+    environment:  # Sets environment variables for MySQL
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"  # Maps MySQL’s default port to the host
+#    volumes:
+#      - ../sql/seed.sql:/docker-entrypoint-initdb.d/seed.sql  # Auto-run SQL script
+#      - db_data:/var/lib/mysql  # Persists database data
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+
+#volumes:
+#  db_data:  # Defines a named volume for persistent storage

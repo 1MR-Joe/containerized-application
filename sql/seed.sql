@@ -1,0 +1,3 @@
+insert into products(`name`, `price_in_cents`, `description`, `image`, `rating`) values ('blue sweet shirt', 1000, "Wrap yourself in comfort and style with our Blue Sweatshirt.", '/images/products/product1.png', 3.9);
+insert into products(`name`, `price_in_cents`, `description`, `image`, `rating`) values ('gray sweet shirt', 700, "Elevate your everyday look with our Gray Sweatshirt.", '/images/products/product.png', 1.9);
+insert into products(`name`, `price_in_cents`, `description`, `image`, `rating`) values ('Creatine Monohydric', 5000, "Fuel your workouts with our premium Creatine Monohydric.", '/images/products/product2.png', 4.4);
